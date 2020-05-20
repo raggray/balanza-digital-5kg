@@ -1,0 +1,35 @@
+#include "HX711.h"
+
+#include <LiquidCrystal.h>
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+const int DOUT=A1;
+const int CLK=A0;
+
+HX711 balanza;
+
+void setup() {
+  lcd.begin (16,2);
+  balanza.begin(DOUT, CLK);
+ //lcd.setCursor(0,1);
+  //lcd.print("Lectura del valor del ADC:");
+  lcd.print(balanza.read());
+  //lcd.print("No ponga ningun  objeto sobre la balanza");
+  //lcd.print("Destarando...");
+  //lcd.print("...");
+  balanza.set_scale(386047.5); // Establecemos la escala
+  balanza.tare(20);  //El peso actual es considerado Tara.
+  
+  //lcd.print("Pesar");  
+}
+
+void loop() {
+  lcd.setCursor (1,0);
+  lcd.print("Peso: ");
+  lcd.setCursor (10,0);
+  lcd.print(balanza.get_units(20),3);
+ lcd.setCursor (7,0);
+  lcd.print("kg");
+  delay(500);
+}
